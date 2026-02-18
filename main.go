@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	"time"
 )
 
 func main() {
@@ -11,6 +13,17 @@ func main() {
 
 	// Crear router
 	r := gin.Default()
+
+	// ======================
+	// CORS (OBLIGATORIO)
+	// ======================
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Authorization"},
+		MaxAge: 12 * time.Hour,
+	}))
+
 
 	// ======================
 	// PET
