@@ -119,6 +119,24 @@ func CreateAppointment(c *gin.Context) {
 	c.JSON(http.StatusOK, appointment)
 }
 
+func DeleteAppointment(c *gin.Context) {
+	id := c.Param("id")
+
+	// Primero, eliminar todos los dataSense asociados a esta cita
+	if err := DB.Where("idAppointment = ?", id).Delete(&DataSense{}).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Luego eliminar la cita
+	if err := DB.Delete(&Appointment{}, id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Appointment deleted successfully"})
+}
+
 
 // ======================
 // DATASENSE HANDLERS
@@ -198,4 +216,16 @@ func DeleteDataSense(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "DataSense deleted"})
+}
+
+
+func DeleteDataSenseByAppointment(c *gin.Context) {
+	appointmentID := c.Param("id")
+
+	if err := DB.Where("idAppointment = ?", appointmentID).Delete(&DataSense{}).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "All DataSense for appointment deleted successfully"})
 }

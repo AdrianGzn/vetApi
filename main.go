@@ -40,6 +40,7 @@ func main() {
 	r.GET("/appointment/getAppointments", GetAppointments)
 	r.GET("/appointment/getAppointmentsByPet/:id", GetAppointmentsByPet)
 	r.POST("/appointment/createAppointment", CreateAppointment)
+	r.DELETE("/appointment/deleteAppointment/:id", DeleteAppointment)
 
 	// ======================
 	// DATASENSE
@@ -48,6 +49,7 @@ func main() {
 	r.GET("/dataSense/getDataSenseByPetIdAndType/:id/:type", GetDataSenseByPetIdAndType)
 	r.POST("/dataSense/createDataSense", CreateDataSense)
 	r.DELETE("/dataSense/deleteDataSense/:id", DeleteDataSense)
+	r.DELETE("/dataSense/deleteDataSenseByAppointment/:id", DeleteDataSenseByAppointment)
 
 	// Iniciar servidor
 	r.Run(":8080")
