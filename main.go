@@ -51,6 +51,11 @@ func main() {
 	r.DELETE("/dataSense/deleteDataSense/:id", DeleteDataSense)
 	r.DELETE("/dataSense/deleteDataSenseByAppointment/:id", DeleteDataSenseByAppointment)
 
+	// ======================
+	// USER
+	// ======================
+	r.POST("/user/login", Login)
+
 	// Iniciar servidor
 	r.Run(":8080")
 }

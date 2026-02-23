@@ -69,3 +69,13 @@ type DataSense struct {
 func (DataSense) TableName() string {
 	return "dataSense"
 }
+
+type User struct {
+	ID       uint   `gorm:"primaryKey;column:id" json:"id"`
+	Name     string `gorm:"column:name;not null" json:"name"`
+	Password string `gorm:"column:password;not null" json:"-"`
+}
+
+func (User) TableName() string {
+	return "user"
+}

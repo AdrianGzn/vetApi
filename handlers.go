@@ -229,3 +229,43 @@ func DeleteDataSenseByAppointment(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "All DataSense for appointment deleted successfully"})
 }
+
+// ======================
+// USER HANDLERS
+// ======================
+
+type LoginRequest struct {
+	Name     string `json:"name" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type LoginResponse struct {
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Token string `json:"token"`
+}
+
+func Login(c *gin.Context) {
+	var loginReq LoginRequest
+
+	
+	if err := c.ShouldBindJSON(&loginReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and password are required"})
+		return
+	}
+
+	
+	var user User
+	result := DB.Where("name = ? AND password = ?", loginReq.Name, loginReq.Password).First(&user)
+
+	if result.Error != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
+	
+	c.JSON(http.StatusOK, LoginResponse{
+		ID:    user.ID,
+		Name:  user.Name,
+		Token: "dummy-token",
+	})
+}
