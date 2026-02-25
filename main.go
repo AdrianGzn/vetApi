@@ -53,6 +53,7 @@ func main() {
 
 	// USER
 	r.POST("/user/login", Login)
+	r.PUT("/user/update/:id", UpdateUser)
 
 	// Iniciar servidor
 	r.Run(":8080")

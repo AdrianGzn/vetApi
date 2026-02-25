@@ -245,6 +245,11 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
+type UpdateUserRequest struct {
+	Name     string `json:"name" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func Login(c *gin.Context) {
 	var loginReq LoginRequest
 
@@ -268,4 +273,52 @@ func Login(c *gin.Context) {
 		Name:  user.Name,
 		Token: "dummy-token",
 	})
+}
+
+func UpdateUser(c *gin.Context) {
+    id := c.Param("id")
+    
+	
+    var existingUser User
+    if err := DB.First(&existingUser, id).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+        return
+    }
+    
+	
+    var updateReq UpdateUserRequest
+    if err := c.ShouldBindJSON(&updateReq); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Name and password are required"})
+        return
+    }
+    
+	
+    var existingName User
+    if err := DB.Where("name = ? AND id != ?", updateReq.Name, id).First(&existingName).Error; err == nil {
+        c.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
+        return
+    }
+    
+	
+    updates := map[string]interface{}{
+        "name":     updateReq.Name,
+        "password": updateReq.Password,
+    }
+    
+    if err := DB.Model(&User{}).Where("id = ?", id).Updates(updates).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Error updating user"})
+        return
+    }
+    
+	
+    var updatedUser User
+    DB.First(&updatedUser, id)
+    
+    c.JSON(http.StatusOK, gin.H{
+        "message": "User updated successfully",
+        "user": gin.H{
+            "id":   updatedUser.ID,
+            "name": updatedUser.Name,
+        },
+    })
 }
