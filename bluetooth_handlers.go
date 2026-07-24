@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -236,18 +238,6 @@ func GetBluetoothStatus(c *gin.Context) {
 // ================================================================
 
 func floatToString(f float64) string {
-	return string(rune(f))
-	// En una implementación real, usar un formatear adecuado
-	// return fmt.Sprintf("%f", f)
-}
-
-// Para evitar errores de compilación, usar strconv
-import (
-	"strconv"
-	"time"
-)
-
-func floatToStringProper(f float64) string {
 	return strconv.FormatFloat(f, 'f', 2, 64)
 }
 
