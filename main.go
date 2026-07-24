@@ -51,6 +51,27 @@ func main() {
 	r.DELETE("/dataSense/deleteDataSense/:id", DeleteDataSense)
 	r.DELETE("/dataSense/deleteDataSenseByAppointment/:id", DeleteDataSenseByAppointment)
 
+	// ======================
+	// BLUETOOTH - NUEVAS RUTAS
+	// ======================
+	// Guardar datos Bluetooth en una cita específica
+	r.POST("/bluetooth/saveSensorData", SaveBluetoothData)
+
+	// Guardar streaming continuo (sin cita específica)
+	r.POST("/bluetooth/stream", SaveBluetoothStreamData)
+
+	// Obtener últimos datos de un perro
+	r.GET("/bluetooth/latestData/:id", GetLatestBluetoothData)
+
+	// Iniciar nueva prueba
+	r.POST("/bluetooth/startTest", StartBluetoothTest)
+
+	// Finalizar prueba
+	r.POST("/bluetooth/endTest", EndBluetoothTest)
+
+	// Estado de conexión
+	r.GET("/bluetooth/status", GetBluetoothStatus)
+
 	// USER
 	r.POST("/user/login", Login)
 	r.PUT("/user/update/:id", UpdateUser)
